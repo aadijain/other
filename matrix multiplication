@@ -1,0 +1,110 @@
+#include<iostream>
+#include<fstream>
+#include<map>
+
+
+
+using namespace std;
+
+struct MAT
+{
+    int m,n;
+    long long X[10][10];
+};
+long mod=100;
+int ctr=0;
+map<long long,MAT> record;
+
+MAT unit(int l)
+{
+    MAT A;
+    A.n=A.m=l;
+    for(int i=0;i<l;i++)
+        for(int j=0;j<l;j++)
+            A.X[i][j]=0;
+    for(int i=0;i<l;i++)
+        A.X[i][i]=1;
+    return A;
+}
+
+MAT mult(MAT A,MAT B)
+{
+    int i,j,k;
+    MAT C;
+    C.m=A.m;
+    C.n=B.n;
+
+    for(int i=0;i<A.m;i++)
+        for(int j=0;j<B.n;j++)
+            C.X[i][j]=0;
+    for(int i=0;i<A.m;i++)
+        for(int j=0;j<B.n;j++)
+            for(int k=0;k<A.n;k++)
+            {
+                C.X[i][j]+=(A.X[i][k]*B.X[k][j]) %mod;
+                C.X[i][j]%=mod;
+            }
+    return C;
+}
+
+MAT exp(MAT A,int n)
+{
+    MAT C;
+    if(record.count(n))
+    {
+         return record[n];
+         ctr++;
+    }
+    if(n==0)
+        return record[0]=unit(A.n);
+
+    if(n%2==0)
+    {
+        C=exp(A,n/2);
+        return record[n]=mult(C,C);
+    }
+    else
+    {
+        C=exp(A,n/2);
+        C=mult(C,C);
+        return record[n]=mult(C,A);
+    }
+}
+
+void print(MAT A)
+{
+    for(int i=0;i<A.m;i++)
+    {
+        cout<<"\n";
+        for(int j=0;j<A.n;j++)
+            cout<<A.X[i][j]<<" ";
+    }
+}
+void input(MAT &A)
+{
+    cout<<"\nEnter dimensions:  ";
+    cin>>A.m>>A.n;
+
+    for(int i=0;i<A.m;i++)
+        for(int j=0;j<A.n;j++)
+            cin>>A.X[i][j];
+}
+
+int main()
+{
+ //MAT A,B;
+ //input(A);input(B);
+ long long n;
+
+ MAT A={2,2,{{1,1},{1,0}}};
+ MAT B={2,1,{{1},{0}}};
+
+ do{
+ cout<<"\n\nn, mod:  ";
+ cin>>n;
+ cin>>mod;
+ cout<<"Fib "<<n<<" (mod "<<mod<<"): "<<mult(exp(A,n),B).X[1][0];
+ }while(n);
+
+ cout<<endl<<record.size()<<"\n"<<ctr;
+}
