@@ -1,0 +1,179 @@
+#include<conio.h>
+#include<iostream>
+#include<fstream>
+#include<stdlib.h>
+#include<ctype.h>
+#include<windows.h>
+#include<math.h>
+#include<dos.h>
+#include<time.h>
+
+
+using namespace std;
+
+/*void gotoxy(int x,int y)
+{
+printf("%c[%d;%df",0x1B,y,x);
+}*/
+
+void gotoxy(int x, int y)
+{
+  static HANDLE h = NULL;
+  if(!h)
+    h = GetStdHandle(STD_OUTPUT_HANDLE);
+  COORD c = { x, y };
+  SetConsoleCursorPosition(h,c);
+}
+
+void textcolor(int fcolour,int bcolour=7)
+{
+    int colour=16*bcolour+fcolour;
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),colour);
+    return;
+}
+
+void delay(int n)
+{
+    Sleep(n);
+}
+
+void test1()
+{
+    textcolor(2);
+    printf("Normal\t\t");
+    cout<<"Normal\n\n";
+    textcolor(4);
+    printf("coloured\t");
+    cout<<"coloured\n\n";
+    textcolor(2);
+    delay(4000);
+    printf("Delayed\t\t");
+    cout<<"Delayed\n\n";
+    gotoxy(15,15);
+    printf("Shifted\t\t");
+    cout<<"Shifted\n\n";
+
+    for(int i=0;i<20;i++)
+    {
+    textcolor(i);
+    printf("%d%c",i,'\n');
+    }
+}
+
+void test2()
+{
+    char ch;
+    cout<<"Input: ";
+    ch=getch();
+    cout<<"\nOutput: "<<ch;
+}
+
+void test3()
+{
+    int a=10;
+    int * b=&a;
+    cout<<b<<" "<<*b;
+    *b++;///*(b++)
+    cout<<endl<<b<<" "<<*b;
+}
+void test5()
+{
+    int l;
+    cin>>l;
+    int *ptr=new int[l];
+    cout<<sizeof(ptr)       ///4
+        <<endl<<ptr[l]      ///junk
+        <<endl<<ptr[l-1];   ///0
+}
+
+void test6()
+{///const value not modified
+    const int c=5;
+    cout<<c;
+    *(int *)&c = 7;
+    cout<<endl<<c;
+}
+
+void test7()
+{
+    int arr[10]={1,2,3,4,5};
+    cout<<sizeof(arr)/sizeof(arr[0])
+        <<endl<<1[&arr]-arr;
+    ///both case 10
+    ///if array is given as argument then doesnt work
+}
+
+void test8()
+{/** doesnt work
+    int arr[10]={[1]=2,[3]=3};
+    for(int i=0;i<10;i++)
+        cout<<arr[i]<<"  "; */
+}
+
+void test9()
+{///matches all char in between (inclusive)
+    switch(getch())
+    {
+     case 'a'...'z':    cout<<"Lower";
+                        break;
+     case 'A'...'Z':    cout<<"Upper";
+                        break;
+     case '0'...'9':    cout<<"Number";
+                        break;
+     default:           cout<<"Special";
+     ///will not match if not 'default'
+    }
+}
+
+void test10()
+{
+    int a,i=0;
+    cin>>a;
+    switch(a)
+    {
+        case 1: cout<<"case 1\n";
+                break;
+
+        for(i=1000;i<7;i++)///initial declaration is skipped
+        {
+            case 2: cout<<"*"<<i<<"*";
+        }
+        break;
+
+        if(2==3)///condition is skipped
+        case 3: cout<<"case 3\n";
+    }
+}
+
+void test11()
+{///does not print exact power of 2
+    printf("%.0f\n",pow(2,747));
+}
+
+void test12()
+{
+    cout << __FUNCTION__<<endl///name of this function
+         << __LINE__<<endl///line number
+         << __TIME__<<endl///HH:MM:SS (time when compiled)
+         << __DATE__<<endl///Mmm DD YYYY
+         << __FILE__;///complete path
+}
+
+
+void test13()
+{
+    ///checks if there are contiguous 1's in input
+    int n;cin>>n;
+
+    n+=(-n)&n;
+    n&=(n-1);
+
+    if(!n)
+        cout<<"yes";
+}
+
+int main()
+{
+    test13();
+    return 0;
+}
